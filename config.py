@@ -14,22 +14,23 @@ class Config:
 
 class SandboxConfig(Config):
     DEBUG = True
-    MONGO_URL = os.environ.get("MONGO_URL")
+    MONGO_HOST = os.environ.get("MONGO_HOST")
+    MONGO_PORT = os.environ.get("MONGO_PORT") or 27017
     SERVER_NAME = os.environ.get("SERVER_NAME")
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    MONGO_URL = os.environ.get("MONGO_URL") or "localhost"
+    MONGO_URI = os.environ.get("MONGO_URL") or "localhost"
 
 
 class TestingConfig(Config):
     TESTING = True
-    MONGO_URL = os.environ.get("MONGO_URL") or "localhost"
+    MONGO_URI = os.environ.get("MONGO_URL") or "localhost"
 
 
 class ProductionConfig(Config):
     SERVER_NAME = os.environ.get("SERVER_NAME")
-    MONGO_URL = os.environ.get("MONGO_URL") or "localhost"
+    MONGO_URI = os.environ.get("MONGO_URL") or "localhost"
 
 config = {
     'development': DevelopmentConfig,
