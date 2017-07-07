@@ -128,13 +128,11 @@ def get_days(source):
             return make_response(
                 "Invalid days (>= 0)", 400
             )
-    else:
-        days = 60
 
     result = []
     trafficDB = mongo.db
     query = trafficDB[source].find(filt).sort(
-        "date", pymongo.ASCENDING)[:100 * days].distinct("date")[:days]
+        "date", pymongo.ASCENDING).distinct("date")[:days]
     # if days is None, there are no limits
     # if days is set, return days result
     if days is not None and days > 0:
