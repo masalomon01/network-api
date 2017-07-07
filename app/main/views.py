@@ -1,7 +1,7 @@
-
+from . import main
 from flask import flash, redirect, render_template, session, url_for, abort
 
 
-@main.route("/", methods=['GET', "POST"])
+@main.route("/")
 def index():
     return "Traffic API is running!"
