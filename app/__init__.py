@@ -1,10 +1,8 @@
 from flask import Flask
-from flask_pymongo import PyMongo
 from flask_sqlalchemy import SQLAlchemy
 
 from config import config
 
-mongo = PyMongo()
 db = SQLAlchemy()
 
 def create_app(config_name):
