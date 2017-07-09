@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import os
-from app import create_app, mongo
+from app import create_app
 from flask_script import Manager, Shell
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, MigrateCommand
