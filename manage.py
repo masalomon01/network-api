@@ -2,12 +2,20 @@
 import os
 from app import create_app, mongo
 from flask_script import Manager, Shell
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate, MigrateCommand
+
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
+# migrate = Migrate(app, db)
+
+# manager.add_command('db', MigrateCommand)
+
 
 def make_shell_context():
-    return dict(app=app, mongo=mongo)
+    return dict(app=app, db=db)
+
 
 @manager.command
 def test():

@@ -1,5 +1,7 @@
 flask
-flask_pymongo
+flask-migrate
+flask_script
+flask-sqlalchemy
 requests
 gunicorn
-flask_script
+psycopg2

@@ -4,7 +4,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'Wildcat Metropia TrafficDB'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'Metropia Networkland'
+    #SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL'] or \
+    #                          'postgres://dtolyqrislafqi:5a3d4791e40522df04870a9fb280348eac48e6bffb799095000b2305b61cbbbc@ec2-23-23-228-115.compute-1.amazonaws.com:5432/d9crmiih79tddt'
     MONGO_DBNAME = "Traffic"
 
     @staticmethod
@@ -14,14 +16,16 @@ class Config:
 
 class SandboxConfig(Config):
     DEBUG = True
-    MONGO_HOST = os.environ.get("MONGO_HOST")
-    MONGO_PORT = os.environ.get("MONGO_PORT") or 27017
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
+                              'postgres://dtolyqrislafqi:5a3d4791e40522df04870a9fb280348eac48e6bffb799095000b2305b61cbbbc@ec2-23-23-228-115.compute-1.amazonaws.com:5432/d9crmiih79tddt'
+
     SERVER_NAME = os.environ.get("SERVER_NAME")
 
 class DevelopmentConfig(Config):
     DEBUG = True
     MONGO_URI = os.environ.get("MONGO_URL") or "localhost"
-
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
+                              'postgres://dtolyqrislafqi:5a3d4791e40522df04870a9fb280348eac48e6bffb799095000b2305b61cbbbc@ec2-23-23-228-115.compute-1.amazonaws.com:5432/d9crmiih79tddt'
 
 class TestingConfig(Config):
     TESTING = True
