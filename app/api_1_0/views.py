@@ -48,6 +48,17 @@ def mario_radius():
 		return result
 
 
+@api.route('/trace', methods=['GET'])
+def trace_network():
+    # trace will ask for a city and api needs to return links, predecessors and successors
+    city = request.args.get('city')
+    if city is None:
+        return make_response("please give me a city to return the correct data tucson, elpaso, austin", 400)
+    else:
+        trace = get_pred_suc(city)
+        return trace
+
+
 """
 HELPERS
 """
@@ -87,3 +98,14 @@ def get_links_from_radius(lon, lat, radius):
 	for row in results:
 		r_dic[row[0]] = {"gid": row[0], "street_name": row[1], 'speed': row[2], 'direction': row[3]}
 	return jsonify(r_dic)
+
+
+def get_pred_suc(city):
+    query = """SELECT linkid_ptv, predecessors, successors
+                FROM {}.dev_wkts_{}""".format(schema, city)
+    cursor.execute(query)
+    results = cursor.fetchall()
+    t_dic = {}
+    for row in results:
+        t_dic[row[0]] = [row[1], row[2]]
+    return jsonify(t_dic)
