@@ -59,6 +59,17 @@ def trace_network():
         return trace
 
 
+@api.route('/idmapping', methods=['GET'])
+def gid_linkid_mapping():
+    # this will provide a mapping dictionary for linkid and gid for a specific city
+    city = request.args.get('city')
+    if city is None:
+        return make_response("please give me a city to return the correct data tucson, elpaso, austin", 400)
+    else:
+        mapping = get_id_mapping(city)
+        return mapping
+
+
 """
 HELPERS
 """
@@ -109,3 +120,14 @@ def get_pred_suc(city):
     for row in results:
         t_dic[row[0]] = [row[1], row[2]]
     return jsonify(t_dic)
+
+
+def get_id_mapping(city):
+    query = """SELECT linkid_parade, linkid_ptv
+                FROM {}.dev_wkts_{}""".format(schema, city)
+    cursor.execute(query)
+    results = cursor.fetchall()
+    m_dic = {}
+    for row in results:
+        m_dic[row[0]] = row[1]
+    return jsonify(m_dic)
