@@ -48,7 +48,7 @@ def mario_radius():
 		return result
 
 
-@api.route('/trace', methods=['GET'])
+@api.route('/network/trace', methods=['GET'])
 def trace_network():
     # trace will ask for a city and api needs to return links, predecessors and successors
     city = request.args.get('city')
@@ -59,7 +59,7 @@ def trace_network():
         return trace
 
 
-@api.route('/idmapping', methods=['GET'])
+@api.route('/network/idmapping', methods=['GET'])
 def gid_linkid_mapping():
     # this will provide a mapping dictionary for linkid and gid for a specific city
     city = request.args.get('city')
@@ -68,6 +68,17 @@ def gid_linkid_mapping():
     else:
         mapping = get_id_mapping(city)
         return mapping
+
+@api.route('/network/tmc', methods=['GET'])
+def network_tmc():
+    # this will return tmc id: and all the associated [gid, length] to that tmc
+    city = request.args.get('city')
+    if city is None:
+        return make_response("please give me a city to return the correct data tucson, elpaso, austin", 400)
+    else:
+        tmc = get_tmc(city)
+        return tmc
+
 
 
 """
@@ -131,3 +142,17 @@ def get_id_mapping(city):
     for row in results:
         m_dic[row[0]] = row[1]
     return jsonify(m_dic)
+
+
+def get_tmc(city):
+    query = """SELECT tmc, array_agg('[' || linkid_parade || ', ' || length || ']')
+                FROM {}.dev_wkts_{}
+                WHERE tmc is not NULL
+                GROUP BY tmc""".format(schema, city)
+    cursor.execute(query)
+    results = cursor.fetchall()
+    t_dic = {}
+    for row in results:
+        t_dic[row[0]] = row[1]
+    return jsonify(t_dic)
+
