@@ -2,6 +2,7 @@ flask
 flask-migrate
 flask_script
 flask-sqlalchemy
+flask-cors
 requests
 gunicorn
 psycopg2

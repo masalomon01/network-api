@@ -14,6 +14,7 @@ url = urlparse('postgres://dtolyqrislafqi:5a3d4791e40522df04870a9fb280348eac48e6
 db = "dbname=%s user=%s password=%s host=%s " % (url.path[1:], url.username, url.password, url.hostname)
 schema = 'dev_wkts'
 conn = pg.connect(db)
+# conn = pg.connect(user='postgres', password='postgres', host='192.168.1.98', database='wkt')  # dev port default 5432
 cursor = conn.cursor()
 dict_cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -80,6 +81,7 @@ def network_tmc():
 
 
 @api.route('/network/link/<cityCode>/<int:id>')
+@cross_origin(headers=['Content-Type']) # allow all origins all methods.
 def get_link(cityCode, id):
 	city = cityCode
 	gid = id
@@ -93,16 +95,8 @@ def get_link(cityCode, id):
 HELPERS
 """
 
-def connect_2_db():
-	conn = pg.connect(user='networkland', password='M+gis>ptv',
-	                  host='postgresql.crvadswmow49.us-west-2.rds.amazonaws.com',
-	                  database='Networkland')  # port default 5432
-	return conn
 
 def get_some_links(links):
-	# conn = pg.connect(user='postgres', password='postgres', host='192.168.1.98', database='wkt')  # port default 5432
-	#conn = connect_2_db()
-	#cursor = conn.cursor()
 	query = "SELECT * FROM {}.dev_wkts_tucson LIMIT {};".format(schema, links)
 	cursor.execute(query)
 	results = cursor.fetchall()
