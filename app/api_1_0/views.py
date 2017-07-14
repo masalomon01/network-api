@@ -81,7 +81,7 @@ def network_tmc():
 
 
 @api.route('/network/link/<cityCode>/<int:id>')
-@cross_origin(headers=['Content-Type']) # allow all origins all methods.
+@cross_origin() # allow all origins all methods.
 def get_link(cityCode, id):
 	city = cityCode
 	gid = id
