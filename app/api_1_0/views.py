@@ -53,11 +53,16 @@ def mario_radius():
 @api.route('/network/trace', methods=['GET'])
 def trace_network():    # trace will ask for a city and api needs to return links, predecessors and successors
 	city = request.args.get('city')
+	wkt = request.args.get('wkt')
 	if city is None:
 		return make_response("please give me a city to return the correct data tucson, elpaso, austin", 400)
 	else:
 		trace = get_pred_suc(city)
-	return trace
+		if wkt is None:
+			return trace
+		else:
+			wkt = get_wkt(city)
+			return wkt
 
 
 @api.route('/network/idmapping', methods=['GET'])
@@ -191,3 +196,14 @@ def get_dma(city, gid):
 		       'reverse': [int(row[15])], 'speed': int(row[16]), 'succLinks': succLinks, 'tmc': tmc,
 		       'toNode': int(row[19])}
 	return jsonify(dic)
+
+
+def get_wkt(city):
+	query = """SELECT linkid_parade, wkt
+                FROM {}.dev_wkts_{}""".format(schema, city)
+	cursor.execute(query)
+	results = cursor.fetchall()
+	m_dic = {}
+	for row in results:
+		m_dic[row[0]] = row[1]
+	return jsonify(m_dic)

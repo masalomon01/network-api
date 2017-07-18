@@ -1,0 +1,15 @@
+Heroku Network DB Requirements:
+
+Set Up POSTGRES add on:
+
+Set Up Schema:
+CREATE SCHEMA yourschema;
+
+**Heroku sometimes runs some olf postgis version make sure you can run all the necessary spatial queries by running:
+https://stackoverflow.com/questions/21311185/error-function-addgeometrycolumnunknown-when-inserting-sql-file-in-to-post
+CREATE EXTENSION postgis;
+
+
+LOAD INITAL TABLES ON DB
+run wkt_to_db.py script
+
