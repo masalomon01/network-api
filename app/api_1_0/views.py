@@ -51,21 +51,18 @@ def mario_radius():
 
 
 @api.route('/network/trace', methods=['GET'])
-def trace_network():    # trace will ask for a city and api needs to return links, predecessors and successors
+def trace_network():
+	# trace will ask for a city and api needs to return links, predecessors and successors
 	city = request.args.get('city')
-	wkt = request.args.get('wkt')
 	if city is None:
 		return make_response("please give me a city to return the correct data tucson, elpaso, austin", 400)
 	else:
 		trace = get_pred_suc(city)
-		if wkt is None:
-			return trace
-		else:
-			wkt = get_wkt(city)
-			return wkt
+		return trace
 
 
-@api.route('/network/idmapping', methods=['GET'])
+@api.route('/network/idmapping/', methods=['GET'])
+@cross_origin() # allow all origins all methods.
 def gid_linkid_mapping():   # this will provide a mapping dictionary for linkid and gid for a specific city
 	city = request.args.get('city')
 	if city is None:
@@ -164,6 +161,7 @@ def get_tmc(city):
 		t_dic[row[0]] = row[1]
 	return jsonify(t_dic)
 
+
 def get_dma(city, gid):
 	query = """ SELECT linkid_parade, '{}' as city, linkid_parade as contain, ST_AsGeoJSON(geom),
             fftt, firstorientation, fromnodeid_parade, linkid_ptv, linkid_parade, lastorientation, length, 
@@ -196,14 +194,3 @@ def get_dma(city, gid):
 		       'reverse': [int(row[15])], 'speed': int(row[16]), 'succLinks': succLinks, 'tmc': tmc,
 		       'toNode': int(row[19])}
 	return jsonify(dic)
-
-
-def get_wkt(city):
-	query = """SELECT linkid_parade, wkt
-                FROM {}.dev_wkts_{}""".format(schema, city)
-	cursor.execute(query)
-	results = cursor.fetchall()
-	m_dic = {}
-	for row in results:
-		m_dic[row[0]] = row[1]
-	return jsonify(m_dic)
