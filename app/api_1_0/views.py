@@ -9,7 +9,7 @@ from sqlalchemy.dialects import postgresql
 import psycopg2 as pg
 import psycopg2.extras
 from flask import (jsonify, make_response, abort, request, current_app)
-from flask_cors import CORS, cross_origin
+# from flask_cors import CORS, cross_origin
 
 url = urlparse('postgres://dtolyqrislafqi:5a3d4791e40522df04870a9fb280348eac48e6bffb799095000b2305b61cbbbc@ec2-23-23-228-115.compute-1.amazonaws.com:5432/d9crmiih79tddt')
 db = "dbname=%s user=%s password=%s host=%s " % (url.path[1:], url.username, url.password, url.hostname)
@@ -62,7 +62,7 @@ def trace_network():
 
 
 @api.route('/network/idmapping/', methods=['GET'])
-@cross_origin() # allow all origins all methods.
+#@cross_origin() # allow all origins all methods.
 def gid_linkid_mapping():   # this will provide a mapping dictionary for linkid and gid for a specific city
 	city = request.args.get('city')
 	if city is None:
@@ -84,7 +84,7 @@ def network_tmc():
 
 
 @api.route('/network/link/<cityCode>/<int:id>')
-@cross_origin() # allow all origins all methods.
+#@cross_origin() # allow all origins all methods.
 def get_link(cityCode, id):
 	city = cityCode
 	gid = id
