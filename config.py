@@ -23,7 +23,6 @@ class SandboxConfig(Config):
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    MONGO_URI = os.environ.get("MONGO_URL") or "localhost"
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
                               'postgres://dtolyqrislafqi:5a3d4791e40522df04870a9fb280348eac48e6bffb799095000b2305b61cbbbc@ec2-23-23-228-115.compute-1.amazonaws.com:5432/d9crmiih79tddt'
 
