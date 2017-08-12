@@ -5,9 +5,12 @@ from sqlalchemy.dialects import postgresql
 from flask import (jsonify, make_response, abort, request, current_app)
 import json
 import math
+import os
+import urllib.parse
 
-urlparse.uses_netloc.append("postgres")
-url = urlparse.urlparse(os.environ["DATABASE_URL"])
+
+urllib.parse.uses_netloc.append("postgres")
+url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
 
 conn = psycopg2.connect(
     database=url.path[1:],
