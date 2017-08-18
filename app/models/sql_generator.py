@@ -98,6 +98,7 @@ class SQL_census:
 
 	def main_sql(self):
 		schema = 'sandbox'
+		keys = ['city', 'geojson']
 		if self.city == 'elpaso':
 			query = """SELECT cve_ageb::text as zoneid, city, ST_AsGeoJSON(geom) from sandbox.elpaso_juarez_censustracts
 					where city = 'Juarez'
@@ -107,4 +108,4 @@ class SQL_census:
 		else:
 			query = """ SELECT tractce as zoneid, city, ST_AsGeoJSON(geom) from {}.{}_censustracts""".format(schema, self.city)
 
-		return query
+		return query, keys

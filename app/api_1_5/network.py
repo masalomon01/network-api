@@ -55,7 +55,7 @@ class census_API(Resource):
 	def get(self):
 		args = self.getParser.parse_args()
 		sql = SQL_census(args["city"])
-		query = sql.main_sql()
-		result = main_q(query)
+		query, keys = sql.main_sql()
+		result = all_q(query, keys)
 
 		return result

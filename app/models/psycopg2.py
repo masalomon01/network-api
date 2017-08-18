@@ -44,6 +44,9 @@ def all_q(query, keys):
 	m_dic = {}
 	for row in results:
 		temp_dic = dict(zip(keys, row[1:]))
+		if 'geojson' in temp_dic:
+			temp_dic['geojson'] = temp_dic['geojson'].replace("\"", "")
+
 		m_dic[row[0]] = temp_dic
 	return jsonify(m_dic)
 
