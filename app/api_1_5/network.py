@@ -1,6 +1,6 @@
 from flask_restful import reqparse, Resource
 from flask import request
-from ..models import (SQL_wkt, SQL_zone)
+from ..models import (SQL_wkt, SQL_zone, SQL_census)
 from ..models import *
 
 
@@ -39,5 +39,23 @@ class zone_API(Resource):
 		sql = SQL_zone(args["city"], id)
 		query = sql.main_sql()
 		result = main_q_one(query)
+
+		return result
+
+
+class census_API(Resource):
+
+
+	def __init__(self):
+		self.getParser = reqparse.RequestParser()
+		self.getParser.add_argument("city", required=True)
+		self.getParser.add_argument("attr", action="append")
+
+
+	def get(self):
+		args = self.getParser.parse_args()
+		sql = SQL_census(args["city"])
+		query = sql.main_sql()
+		result = main_q(query)
 
 		return result
