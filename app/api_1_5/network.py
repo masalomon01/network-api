@@ -49,13 +49,19 @@ class census_API(Resource):
 	def __init__(self):
 		self.getParser = reqparse.RequestParser()
 		self.getParser.add_argument("city", required=True)
-		self.getParser.add_argument("attr", action="append")
+		self.getParser.add_argument('lat', type=float, default=0.0)
+		self.getParser.add_argument('lon', type=float, default=0.0)
+
 
 
 	def get(self):
 		args = self.getParser.parse_args()
-		sql = SQL_census(args["city"])
-		query, keys = sql.main_sql()
-		result = all_q(query, keys)
+		sql = SQL_census(args["city"], args["lat"], args["lon"])
+		if args["lat"] == 0.0 and args["lon"] == 0.0:
+			query, keys = sql.main_sql()
+			result = all_q(query, keys)
+		else:
+			query = sql.point_in_zone()
+			result = point_in_zone_q(query)
 
 		return result

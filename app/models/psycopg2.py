@@ -7,6 +7,7 @@ import json
 import math
 import os
 import urllib.parse
+import json
 
 
 urllib.parse.uses_netloc.append("postgres")
@@ -44,11 +45,15 @@ def all_q(query, keys):
 	m_dic = {}
 	for row in results:
 		temp_dic = dict(zip(keys, row[1:]))
-		if 'geojson' in temp_dic:
-			temp_dic['geojson'] = temp_dic['geojson'].replace("\"", " ")
+		if 'polygon' in temp_dic:
+			json_acceptable_string = temp_dic['polygon'].replace("'", "\"")
+			d = json.loads(json_acceptable_string)
+			coords = d.get("coordinates")
+			temp_dic['polygon'] = coords
 
 		m_dic[row[0]] = temp_dic
-	return jsonify(m_dic)
+
+	return m_dic
 
 
 def main_q_one(query):
@@ -58,3 +63,20 @@ def main_q_one(query):
 	for row in results:
 		m_dic[row[0]] = row[1]
 	return jsonify(m_dic)
+
+
+def point_in_zone_q(query):
+	cursor.execute(query)
+	results = cursor.fetchall()
+	d = {}
+	for row in results:
+		if row[6] == 'Juarez':
+			d['zone_id'] = row[5]
+			d['city'] = row[6]
+		elif row[6] == 'elpaso':
+			d['zone_id'] = row[9]
+			d['city'] = row[6]
+	return jsonify(d)
+
+
+

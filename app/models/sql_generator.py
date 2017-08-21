@@ -92,13 +92,15 @@ class SQL_zone:
 class SQL_census:
 
 
-	def __init__(self, city):
+	def __init__(self, city, lat, lon):
 		self.city = city
+		self.lat = lat
+		self.lon = lon
 
 
 	def main_sql(self):
 		schema = 'sandbox'
-		keys = ['city', 'geojson']
+		keys = ["city", "polygon"]
 		if self.city == 'elpaso':
 			query = """SELECT cve_ageb::text as zoneid, city, ST_AsGeoJSON(geom) from sandbox.elpaso_juarez_censustracts
 					where city = 'Juarez'
@@ -109,3 +111,17 @@ class SQL_census:
 			query = """ SELECT tractce as zoneid, city, ST_AsGeoJSON(geom) from {}.{}_censustracts""".format(schema, self.city)
 
 		return query, keys
+
+
+	def point_in_zone(self):
+		schema = 'sandbox'
+		if self.city == 'elpaso':
+			self.city = 'elpaso_juarez'
+		query = """ SELECT * FROM {}.{}_censustracts
+					WHERE ST_Contains({}_censustracts.geom,
+                    ST_Transform(
+                        ST_GeomFromText('POINT({} {})', 4326), 4269)
+                        )=true """.format(schema, self.city, self.city, self.lon, self.lat)  # -106.385386 31.757942
+
+		return query
+
