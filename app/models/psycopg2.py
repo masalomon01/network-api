@@ -45,11 +45,11 @@ def all_q(query, keys):
 	m_dic = {}
 	for row in results:
 		temp_dic = dict(zip(keys, row[1:]))
-		if 'polygon' in temp_dic:
-			json_acceptable_string = temp_dic['polygon'].replace("'", "\"")
+		if 'geojson' in temp_dic:
+			json_acceptable_string = temp_dic['geojson'].replace("'", "\"")
 			d = json.loads(json_acceptable_string)
-			coords = d.get("coordinates")
-			temp_dic['polygon'] = coords
+			# coords = d.get("coordinates")
+			temp_dic['geojson'] = d
 
 		m_dic[row[0]] = temp_dic
 
