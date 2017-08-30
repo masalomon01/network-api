@@ -104,11 +104,11 @@ class SQL_census:
 		# schema = 'sandbox'
 		keys = ["city", "geojson"]
 		if self.city == 'elpaso':
-			query = """SELECT cve_ageb::text as zoneid, city, ST_AsGeoJSON(geom) from sandbox.elpaso_juarez_censustracts
+			query = """SELECT cve_ageb::text as zoneid, city, ST_AsGeoJSON(geom) from {}.elpaso_censustracts
 					where city = 'Juarez'
 					UNION
-					SELECT tractce::text as zoneid, city, ST_AsGeoJSON(geom) from sandbox.elpaso_juarez_censustracts
-					where city = 'elpaso'"""
+					SELECT tractce::text as zoneid, city, ST_AsGeoJSON(geom) from {}.elpaso_censustracts
+					where city = 'elpaso'""".format(schema, schema)
 		else:
 			query = """ SELECT tractce as zoneid, city, ST_AsGeoJSON(geom) from {}.{}_censustracts""".format(schema, self.city)
 
@@ -117,8 +117,6 @@ class SQL_census:
 
 	def point_in_zone(self):
 		# schema = 'sandbox'
-		if self.city == 'elpaso':
-			self.city = 'elpaso_juarez'
 		query = """ SELECT * FROM {}.{}_censustracts
 					WHERE ST_Contains({}_censustracts.geom,
                     ST_Transform(
