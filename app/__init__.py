@@ -40,7 +40,7 @@ def get_vars(CONFIG, var):
 		schema = 'production'
 		urllib.parse.uses_netloc.append("postgres")
 		url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
-		conn = psycopg2.connect(
+		conn = pg.connect(
 			database=url.path[1:],
 			user=url.username,
 			password=url.password,
@@ -60,7 +60,7 @@ def get_vars(CONFIG, var):
 		schema = 'sandbox'
 		urllib.parse.uses_netloc.append("postgres")
 		url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
-		conn = psycopg2.connect(
+		conn = pg.connect(
 			database=url.path[1:],
 			user=url.username,
 			password=url.password,
