@@ -1,0 +1,9 @@
+Setting up a new Network DB on Heroku:
+
+Please install the postgis extension before loading the network data otherwise you won't be able to do so:
+ CREATE EXTENSION postgis;
+ CREATE EXTENSION postgis_topology;
+
+Next up load the network tables to the database:
+ For this you will need the network_to_db.py script, you should be able to find this script on the 
+networks bitbucket repository. Once your data is loaded on heroku you can proceed to deploy the app. 
