@@ -1,4 +1,7 @@
+import os
+from app import get_vars
 
+schema = get_vars( os.getenv('CONFIG') or 'default', 'schema')
 
 wkt_dict = {'traceid': 'linkid_parade', 'reverseid_trace': 'reverseid_parade', 'gid': 'linkid_ptv',
             'reverseid_gid': 'reverseid_ptv', 'fromnodeid_trace': 'fromnodeid_parade',
@@ -6,10 +9,9 @@ wkt_dict = {'traceid': 'linkid_parade', 'reverseid_trace': 'reverseid_parade', '
             'tonodeid_gid': 'tonodeid_ptv', 'wkt': 'wkt', 'length': 'length', 'speed': 'speed', 'ltype': 'ltype',
             'fftt': 'fftt', 'road': 'primaryname', 'tmc': 'tmc', 'lanes': 'numlanes', 'successors': 'successors',
             'predecessors': 'predecessors', 'new_ltype': 'new_ltype'}
-schema = 'dev_wkts'
 var = '{}, '
 var_last = '{} '
-from_q = 'FROM {}.dev_wkts_{}'
+from_q = 'FROM {}.wkt_{}'
 
 
 class SQL_wkt:

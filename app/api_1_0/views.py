@@ -9,15 +9,19 @@ from sqlalchemy.dialects import postgresql
 import psycopg2 as pg
 import psycopg2.extras
 from flask import (jsonify, make_response, abort, request, current_app)
+from app import get_vars
 # from flask_cors import CORS, cross_origin
 
-url = urlparse('postgres://dtolyqrislafqi:5a3d4791e40522df04870a9fb280348eac48e6bffb799095000b2305b61cbbbc@ec2-23-23-228-115.compute-1.amazonaws.com:5432/d9crmiih79tddt')
-db = "dbname=%s user=%s password=%s host=%s " % (url.path[1:], url.username, url.password, url.hostname)
-schema = 'dev_wkts'
-conn = pg.connect(db)
+# url = urlparse('postgres://dtolyqrislafqi:5a3d4791e40522df04870a9fb280348eac48e6bffb799095000b2305b61cbbbc@ec2-23-23-228-115.compute-1.amazonaws.com:5432/d9crmiih79tddt')
+# db = "dbname=%s user=%s password=%s host=%s " % (url.path[1:], url.username, url.password, url.hostname)
+# schema = 'dev_wkts'
+# conn = pg.connect(db)
 # conn = pg.connect(user='postgres', password='postgres', host='192.168.1.98', database='wkt')  # dev port default 5432
+# cursor = conn.cursor()
+conn = get_vars( os.getenv('CONFIG') or 'default', 'conn')
+schema = get_vars( os.getenv('CONFIG') or 'default', 'schema')
 cursor = conn.cursor()
-dict_cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+# dict_cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 
 """""
@@ -129,7 +133,7 @@ def get_links_from_radius(lon, lat, radius):
 
 def get_pred_suc(city):
 	query = """SELECT linkid_ptv, predecessors, successors
-                FROM {}.dev_wkts_{}""".format(schema, city)
+                FROM {}.wkt_{}""".format(schema, city)
 	cursor.execute(query)
 	results = cursor.fetchall()
 	t_dic = {}
@@ -140,7 +144,7 @@ def get_pred_suc(city):
 
 def get_id_mapping(city):
 	query = """SELECT linkid_parade, linkid_ptv
-                FROM {}.dev_wkts_{}""".format(schema, city)
+                FROM {}.wkt_{}""".format(schema, city)
 	cursor.execute(query)
 	results = cursor.fetchall()
 	m_dic = {}
@@ -151,7 +155,7 @@ def get_id_mapping(city):
 
 def get_tmc(city):
 	query = """SELECT tmc, array_agg('[' || linkid_parade || ', ' || length || ']')
-                FROM {}.dev_wkts_{}
+                FROM {}.wkt{}
                 WHERE tmc is not NULL
                 GROUP BY tmc""".format(schema, city)
 	cursor.execute(query)
@@ -166,7 +170,7 @@ def get_dma(city, gid):
 	query = """ SELECT linkid_parade, '{}' as city, linkid_parade as contain, ST_AsGeoJSON(geom),
             fftt, firstorientation, fromnodeid_parade, linkid_ptv, linkid_parade, lastorientation, length, 
             new_ltype, primaryname, numlanes, predecessors, reverseid_parade, speed, successors, tmc, tonodeid_parade
-            FROM {}.dev_wkts_{}
+            FROM {}.wkt_{}
             WHERE linkid_ptv = '{}'
             GROUP BY linkid_ptv, fftt, firstorientation, fromnodeid_parade, linkid_ptv, linkid_parade, lastorientation, 
             length, new_ltype, primaryname, numlanes, predecessors, reverseid_parade, speed, successors, tmc, 
