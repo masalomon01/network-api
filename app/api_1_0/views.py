@@ -155,7 +155,7 @@ def get_id_mapping(city):
 
 def get_tmc(city):
 	query = """SELECT tmc, array_agg('[' || linkid_parade || ', ' || length || ']')
-                FROM {}.wkt{}
+                FROM {}.wkt_{}
                 WHERE tmc is not NULL
                 GROUP BY tmc""".format(schema, city)
 	cursor.execute(query)
