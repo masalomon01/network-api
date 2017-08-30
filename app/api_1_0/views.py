@@ -18,8 +18,8 @@ from app import get_vars
 # conn = pg.connect(db)
 # conn = pg.connect(user='postgres', password='postgres', host='192.168.1.98', database='wkt')  # dev port default 5432
 # cursor = conn.cursor()
-conn = get_vars( os.getenv('CONFIG') or 'default', 'conn')
-schema = get_vars( os.getenv('CONFIG') or 'default', 'schema')
+conn = get_vars(os.getenv('CONFIG') or 'default', 'conn')
+schema = get_vars(os.getenv('CONFIG') or 'default', 'schema')
 cursor = conn.cursor()
 # dict_cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 

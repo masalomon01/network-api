@@ -6,6 +6,7 @@ from config import config
 import psycopg2 as pg
 from urllib.parse import urlparse
 import urllib.parse
+import os
 
 
 db = SQLAlchemy()
