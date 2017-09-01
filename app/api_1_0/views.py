@@ -97,6 +97,19 @@ def get_link(cityCode, id):
 		return make_response("link not found", 404)
 	return link
 
+@api.route('/network/dma/<idType>/<cityCode>/<int:id>')
+#@cross_origin() # allow all origins all methods.
+def get_link_2(idType, cityCode, id):
+	city = cityCode
+	l_id = id
+	id_type = idType
+	if id_type not in  ('gid', 'traceid'):
+		return make_response("link type should be gid or tracid only", 404)
+	link = get_dma_2(city, l_id, id_type)
+	if link is None:
+		return make_response("link not found", 404)
+	return link
+
 
 """
 HELPERS
@@ -181,6 +194,44 @@ def get_dma(city, gid):
 	#dict_cur.execute(query)
 	#results = dict_cur.fetchone()
 	print(results)
+	for row in results:
+		json_acceptable_string = row[3].replace("'", "\"")
+		d = json.loads(json_acceptable_string)
+		coords = d.get("coordinates")
+		predLinks = [int(i) for i in row[14].split()]
+		succLinks = [int(i) for i in row[17].split()]
+		if not row[18]:
+			tmc = ""
+		else:
+			tmc = row[18]
+		dic = {"_id": int(row[0]), "city": row[1], 'contain': [int(row[2])], 'coords': coords, 'fft': float(row[4]),
+		       'firstOrientation': float(row[5]), 'fromNode': int(row[6]), 'gid': int(row[7]),
+		       'id_parade': int(row[8]), 'lastOrientation': float(row[9]), 'length': float(row[10]),
+		       'ltype': int(row[11]), 'name': row[12], 'numLanes': int(row[13]), 'predLinks': predLinks,
+		       'reverse': [int(row[15])], 'speed': int(row[16]), 'succLinks': succLinks, 'tmc': tmc,
+		       'toNode': int(row[19])}
+	return jsonify(dic)
+
+
+def get_dma_2(city, l_id, id_type):
+	if id_type == 'gid':
+		type = 'linkid_ptv'
+	elif id_type == 'traceid':
+		type = 'linkid_parade'
+	query = """ SELECT linkid_parade, '{}' as city, linkid_parade as contain, ST_AsGeoJSON(geom),
+            fftt, firstorientation, fromnodeid_parade, linkid_ptv, linkid_parade, lastorientation, length, 
+            new_ltype, primaryname, numlanes, predecessors, reverseid_parade, speed, successors, tmc, tonodeid_parade
+            FROM {}.wkt_{}
+            WHERE {} = '{}'
+            GROUP BY linkid_ptv, fftt, firstorientation, fromnodeid_parade, linkid_ptv, linkid_parade, lastorientation, 
+            length, new_ltype, primaryname, numlanes, predecessors, reverseid_parade, speed, successors, tmc, 
+            tonodeid_parade""".format(city, schema, city, type, l_id)
+	cursor.execute(query)
+	results = cursor.fetchall()
+	#print(results)
+	#dict_cur.execute(query)
+	#results = dict_cur.fetchone()
+	#print(results)
 	for row in results:
 		json_acceptable_string = row[3].replace("'", "\"")
 		d = json.loads(json_acceptable_string)
