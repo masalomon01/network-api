@@ -28,14 +28,17 @@ def all_q(query, keys):
 	results = cursor.fetchall()
 	m_dic = {}
 	for row in results:
+		dic_id = row[0]
 		temp_dic = dict(zip(keys, row[1:]))
 		if 'geojson' in temp_dic:
 			json_acceptable_string = temp_dic['geojson'].replace("'", "\"")
 			d = json.loads(json_acceptable_string)
 			# coords = d.get("coordinates")
 			temp_dic['geojson'] = d
+			city_letter = row[1][0]
+			dic_id = city_letter.lower() + '_' + row[0]
 
-		m_dic[row[0]] = temp_dic
+		m_dic[dic_id] = temp_dic
 	return m_dic
 
 
