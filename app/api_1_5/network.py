@@ -1,6 +1,6 @@
 from flask_restful import reqparse, Resource
 from flask import request
-from ..models import (SQL_wkt, SQL_zone, SQL_census)
+#from ..models import (SQL_wkt, SQL_zone, SQL_census, SQL_main)
 from ..models import *
 
 
@@ -63,5 +63,66 @@ class census_API(Resource):
 		else:
 			query = sql.point_in_zone()
 			result = point_in_zone_q(query)
+
+		return result
+
+
+class nodes_API(Resource):
+
+
+	def __init__(self):
+		self.getParser = reqparse.RequestParser()
+		self.getParser.add_argument("city", required=True)
+		self.getParser.add_argument("attr", action="append")
+
+
+	def get(self, id):
+		args = self.getParser.parse_args()
+		table = 'nodes'
+		sql = SQL_main(args["city"], id, args["attr"], table)
+		if  args["attr"] is None:
+			query = sql.all_sql()
+			result = all_main_q(query)
+		else:
+			query = sql.main_sql()
+			result = main_q(query)
+
+		return result
+
+
+
+class angles_API(Resource):
+
+
+	def __init__(self):
+		self.getParser = reqparse.RequestParser()
+		self.getParser.add_argument("city", required=True)
+
+
+	def get(self):
+		args = self.getParser.parse_args()
+		table = 'angles'
+		sql = SQL_noid(args["city"], table)
+		query = sql.all_sql()
+		result = all_table(query)
+
+		return result
+
+
+
+class featurePoints_API(Resource):
+
+
+	def __init__(self):
+		self.getParser = reqparse.RequestParser()
+		self.getParser.add_argument("city", required=True)
+
+
+	def get(self):
+		args = self.getParser.parse_args()
+		table = 'featurePoints'
+		sql = SQL_noid(args["city"], table)
+		query = sql.all_sql()
+		result = all_table(query)
 
 		return result

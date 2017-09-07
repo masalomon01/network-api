@@ -11,7 +11,9 @@ wkt_dict = {'traceid': 'linkid_parade', 'reverseid_trace': 'reverseid_parade', '
             'predecessors': 'predecessors', 'new_ltype': 'new_ltype'}
 var = '{}, '
 var_last = '{} '
-from_q = 'FROM {}.wkt_{}'
+from_q = 'FROM {}.{}_{}'
+from_table = 'FROM {}.{}'
+
 
 
 class SQL_wkt:
@@ -40,6 +42,7 @@ class SQL_wkt:
 			format.append(v)
 		format.insert(0, wkt_dict[self.id])
 		format.append(schema)
+		format.append('wkt') # this is to specify that this is the wkt
 		format.append(self.city)
 
 		query = query.format(*format)
@@ -55,6 +58,7 @@ class SQL_wkt:
 		format.remove(wkt_dict[self.id])
 		format.insert(0, wkt_dict[self.id])
 		format.append(schema)
+		format.append('wkt')
 		format.append(self.city)
 
 		count = 1
@@ -64,7 +68,6 @@ class SQL_wkt:
 			count += 1
 		query += var_last
 		query += from_q
-
 		query = query.format(*format)
 
 		return query, keys
@@ -124,4 +127,78 @@ class SQL_census:
                         )=true """.format(schema, self.city, self.city, self.lon, self.lat)  # -106.385386 31.757942
 
 		return query
+
+
+
+class SQL_main:
+
+
+	def __init__(self, city, id, args, table):
+		self.city = city
+		self.id = id
+		self.arg_list = args
+		self.table = table
+
+
+	def main_sql(self):
+		query = """SELECT """
+		num_of_args = len(self.arg_list)
+		table_name = self.table + '_' + self.city
+
+		count = 0
+		while count < num_of_args:
+			query += var
+			count += 1
+		query += var_last
+		query += from_table
+
+		format = []
+		for i in self.arg_list:
+			format.append(i)
+		format.insert(0, self.id)
+		format.append(schema)
+		format.append(table_name)
+
+		query = query.format(*format)
+
+		return query
+
+
+	def all_sql(self):
+		query = """SELECT {}, *"""
+		table_name = self.table + '_' + self.city
+		format = []
+		format.insert(0, self.id)
+		format.append(schema)
+		format.append(table_name)
+
+		query += from_table
+
+		query = query.format(*format)
+
+		return query
+
+
+
+class SQL_noid:
+
+
+		def __init__(self, city, table):
+			self.city = city
+			self.table = table
+
+
+		def all_sql(self):
+			query = """SELECT *"""
+			table_name = self.table + '_' + self.city
+			format = []
+			format.append(schema)
+			format.append(table_name)
+
+			query += from_table
+
+			query = query.format(*format)
+
+			return query
+
 

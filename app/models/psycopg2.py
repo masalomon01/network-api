@@ -23,6 +23,19 @@ def main_q(query):
 	return jsonify(m_dic)
 
 
+def all_main_q(query):
+	cursor.execute(query)
+	keys = [desc[0] for desc in cursor.description]
+	keys.pop(0)   # remove the first element of the list as that is they dict key or id defined in the api
+	results = cursor.fetchall()
+	m_dic = {}
+	for row in results:
+		dic_id = row[0]
+		temp_dic = dict(zip(keys, row[1:]))
+		m_dic[dic_id] = temp_dic
+	return m_dic
+
+
 def all_q(query, keys):
 	cursor.execute(query)
 	results = cursor.fetchall()
@@ -64,6 +77,19 @@ def point_in_zone_q(query):
 			d['city'] = row[6]
 	return jsonify(d)
 
+
+def all_table(query):
+	cursor.execute(query)
+	keys = [desc[0] for desc in cursor.description]
+	results = cursor.fetchall()
+	count = 0
+	a_dict = {}
+	for row in results:
+		temp_dic = dict(zip(keys, row))
+		a_dict[count] = temp_dic
+		count += 1
+
+	return a_dict
 
 
 
