@@ -18,7 +18,7 @@ def create_app(config_name):
 	app = Flask("")
 	# app = Flask("__name__")
 	app.config.from_object(config[config_name])
-	db.init_app(app)
+	# db.init_app(app)
 	cors.init_app(app)
 
 	# attach routes and custom error pages here
