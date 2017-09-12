@@ -12,7 +12,6 @@ manager = Manager(app)
 
 # manager.add_command('db', MigrateCommand)
 
-
 def make_shell_context():
     return dict(app=app, db=db)
 
