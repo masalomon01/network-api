@@ -202,3 +202,38 @@ class SQL_noid:
 			return query
 
 
+
+class SQL_dma:
+	def __init__(self, cityCode, idType, args, table):
+		self.city = cityCode
+		self.idType = idType
+		self.arg_list = args
+		self.table = table
+
+
+	def main_sql(self):
+		loq = []  # loq stands for list of queries
+		num_of_args = len(self.arg_list)
+		table_name = self.table + '_' + self.city
+		if self.idType == 'gid':
+			type = 'linkid_ptv'
+		elif self.idType == 'traceid':
+			type = 'linkid_parade'
+		for i in self.arg_list:
+			l_id = i
+			query = """ SELECT {}, '{}' as city, linkid_parade as contain, ST_AsGeoJSON(geom),
+				            fftt, firstorientation, fromnodeid_parade, linkid_ptv, linkid_parade, lastorientation, length, 
+				            new_ltype, primaryname, numlanes, predecessors, reverseid_parade, speed, successors, tmc, tonodeid_parade
+				            FROM {}.{}
+				            WHERE {} = '{}'
+				            GROUP BY linkid_ptv, fftt, firstorientation, fromnodeid_parade, linkid_ptv, linkid_parade, lastorientation, 
+				            length, new_ltype, primaryname, numlanes, predecessors, reverseid_parade, speed, successors, tmc, 
+				            tonodeid_parade""".format(type, self.city, schema, table_name, type, l_id)
+			loq.append(query)
+
+		return loq
+
+
+
+
+

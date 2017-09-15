@@ -126,3 +126,25 @@ class featurePoints_API(Resource):
 		result = all_table(query)
 
 		return result
+
+
+
+class dma_API(Resource):
+
+
+	def __init__(self):
+		self.getParser = reqparse.RequestParser()
+		self.getParser.add_argument("link", action="append")
+
+
+	def get(self, idType, cityCode):
+		args = self.getParser.parse_args()
+		table = 'wkt'
+		sql = SQL_dma(cityCode, idType, args["link"], table)
+		if  args["link"] is None:
+			return make_response("please give me at least one link eg: &link=1", 400)
+		else:
+			loq = sql.main_sql()  # loq stands for list of queries
+			result = dma(loq, id)
+
+			return result
