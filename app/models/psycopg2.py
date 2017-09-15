@@ -92,28 +92,27 @@ def all_table(query):
 	return a_dict
 
 
-def dma(loq, id):  # loq means list of queries
+def dma(query):  # loq means list of queries
 	r_dic = {}
-	for q in loq:
-		cursor.execute(q)
-		results = cursor.fetchall()
-		for row in results:
-			json_acceptable_string = row[3].replace("'", "\"")
-			d = json.loads(json_acceptable_string)
-			coords = d.get("coordinates")
-			predLinks = [int(i) for i in row[14].split()]
-			succLinks = [int(i) for i in row[17].split()]
-			if not row[18]:
-				tmc = ""
-			else:
-				tmc = row[18]
-			dic = {"_id": int(row[0]), "city": row[1], 'contain': [int(row[2])], 'coords': coords, 'fft': float(row[4]),
-			       'firstOrientation': float(row[5]), 'fromNode': int(row[6]), 'gid': int(row[7]),
-			       'id_parade': int(row[8]), 'lastOrientation': float(row[9]), 'length': float(row[10]),
-			       'ltype': int(row[11]), 'name': row[12], 'numLanes': int(row[13]), 'predLinks': predLinks,
-			       'reverse': [int(row[15])], 'speed': int(row[16]), 'succLinks': succLinks, 'tmc': tmc,
-			       'toNode': int(row[19])}
-			r_dic[int(row[0])] = dic
+	cursor.execute(query)
+	results = cursor.fetchall()
+	for row in results:
+		json_acceptable_string = row[3].replace("'", "\"")
+		d = json.loads(json_acceptable_string)
+		coords = d.get("coordinates")
+		predLinks = [int(i) for i in row[14].split()]
+		succLinks = [int(i) for i in row[17].split()]
+		if not row[18]:
+			tmc = ""
+		else:
+			tmc = row[18]
+		dic = {"_id": int(row[0]), "city": row[1], 'contain': [int(row[2])], 'coords': coords, 'fft': float(row[4]),
+		       'firstOrientation': float(row[5]), 'fromNode': int(row[6]), 'gid': int(row[7]),
+		       'id_parade': int(row[8]), 'lastOrientation': float(row[9]), 'length': float(row[10]),
+		       'ltype': int(row[11]), 'name': row[12], 'numLanes': int(row[13]), 'predLinks': predLinks,
+		       'reverse': [int(row[15])], 'speed': int(row[16]), 'succLinks': succLinks, 'tmc': tmc,
+		       'toNode': int(row[19])}
+		r_dic[int(row[0])] = dic
 
 
 	return jsonify(r_dic)

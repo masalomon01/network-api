@@ -144,7 +144,7 @@ class dma_API(Resource):
 		if  args["link"] is None:
 			return make_response("please give me at least one link eg: &link=1", 400)
 		else:
-			loq = sql.main_sql()  # loq stands for list of queries
-			result = dma(loq, id)
+			query = sql.main_sql()  # loq stands for list of queries
+			result = dma(query)
 
 			return result
