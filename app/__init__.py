@@ -77,8 +77,7 @@ def get_vars(CONFIG, var):
 
 	elif CONFIG == 'developer' or  CONFIG == 'default':
 		schema = 'developer'
-		url = urlparse('postgres://dtolyqrislafqi:5a3d4791e40522df04870a9fb280348eac48e6bffb799095000b2305b61cbbbc@ec2-23-23-228-115.compute-1.amazonaws.com:5432/d9crmiih79tddt')
-		db = "dbname=%s user=%s password=%s host=%s " % (url.path[1:], url.username, url.password, url.hostname)
+		db = "dbname='developer' user='mario' password='salermo01' host='70.184.89.171' "
 		conn = pg.connect(db)
 		# conn = pg.connect(user='postgres', password='postgres', host='192.168.1.98', database='wkt')  # dev port default 5432
 
