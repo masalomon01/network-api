@@ -231,5 +231,21 @@ class SQL_dma:
 
 
 
+class SQL_info:
+	def __init__(self, table):
+		self.table = table
+
+
+	def active_network(self):
+		query = """SELECT city, environment, network_version, to_char(deployment_date, 'MM-DD-YYYY HH24:MI:SS'), description
+					FROM {}.{}
+					WHERE deployment_date in (SELECT MAX(deployment_date) FROM {}.{} 
+					GROUP BY city)""".format(schema, self.table,schema, self.table)
+
+		return query
+
+
+
+
 
 

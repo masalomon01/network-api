@@ -14,6 +14,8 @@ api.add_resource(nodes_API, '/nodes/<id>')
 api.add_resource(angles_API, '/angles')
 api.add_resource(featurePoints_API, '/featurePoints')
 api.add_resource(dma_API, '/dma/<idType>/<cityCode>')
+api.add_resource(info_API, '/network/info')
+
 
 
 

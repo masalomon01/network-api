@@ -148,3 +148,20 @@ class dma_API(Resource):
 			result = dma(query)
 
 			return result
+
+
+
+class info_API(Resource):
+
+
+	def __init__(self):
+		self.getParser = reqparse.RequestParser()
+		self.getParser.add_argument("link", action="append")
+
+	def get(self):
+		table = 'deployment_info'
+		sql = SQL_info(table)
+		query = sql.active_network()
+		result = all_table(query)
+
+		return result
