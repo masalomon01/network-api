@@ -236,8 +236,10 @@ def get_dma_2(city, l_id, id_type):
 		json_acceptable_string = row[3].replace("'", "\"")
 		d = json.loads(json_acceptable_string)
 		coords = d.get("coordinates")
+		print(row[17])
 		predLinks = [int(i) for i in row[14].split()]
 		succLinks = [int(i) for i in row[17].split()]
+		print(succLinks)
 		if not row[18]:
 			tmc = ""
 		else:

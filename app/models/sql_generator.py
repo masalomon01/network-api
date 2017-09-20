@@ -213,7 +213,10 @@ class SQL_dma:
 
 	def main_sql(self):
 		loq = []  # loq stands for list of queries
-		links_q = tuple(self.arg_list)
+		if len(self.arg_list) > 1:
+			links_q = tuple(self.arg_list)
+		elif len(self.arg_list) == 1:   # added this logic because you don't want to tuple only one link
+			links_q = '(' + self.arg_list[0] + ')'
 		table_name = self.table + '_' + self.city
 		if self.idType == 'gid':
 			type = 'linkid_ptv'

@@ -100,12 +100,10 @@ def dma(query):  # loq means list of queries
 		json_acceptable_string = row[3].replace("'", "\"")
 		d = json.loads(json_acceptable_string)
 		coords = d.get("coordinates")
+		row = ['' if v is None else v for v in row]   # avoid None type errors
 		predLinks = [int(i) for i in row[14].split()]
 		succLinks = [int(i) for i in row[17].split()]
-		if not row[18]:
-			tmc = ""
-		else:
-			tmc = row[18]
+		tmc = row[18]
 		dic = {"_id": int(row[0]), "city": row[1], 'contain': [int(row[2])], 'coords': coords, 'fft': float(row[4]),
 		       'firstOrientation': float(row[5]), 'fromNode': int(row[6]), 'gid': int(row[7]),
 		       'id_parade': int(row[8]), 'lastOrientation': float(row[9]), 'length': float(row[10]),
