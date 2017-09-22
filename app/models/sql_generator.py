@@ -240,7 +240,7 @@ class SQL_info:
 
 
 	def active_network(self):
-		query = """SELECT city, environment, network_version, to_char(deployment_date, 'MM-DD-YYYY HH24:MI:SS'), description
+		query = """SELECT city, environment, network_version, to_char(deployment_date, 'MM-DD-YYYY HH24:MI:SS') as deployment_date, description
 					FROM {}.{}
 					WHERE deployment_date in (SELECT MAX(deployment_date) FROM {}.{} 
 					GROUP BY city)""".format(schema, self.table,schema, self.table)
