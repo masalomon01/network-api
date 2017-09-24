@@ -15,6 +15,8 @@ api.add_resource(angles_API, '/angles')
 api.add_resource(featurePoints_API, '/featurePoints')
 api.add_resource(dma_API, '/dma/<idType>/<cityCode>')
 api.add_resource(info_API, '/network/info')
+api.add_resource(quadTree_API, '/quadtree')
+
 
 
 

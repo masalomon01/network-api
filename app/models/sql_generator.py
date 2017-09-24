@@ -183,10 +183,10 @@ class SQL_main:
 class SQL_noid:
 
 
-		def __init__(self, city, table):
+		def __init__(self, city, table, col_list=[]):
 			self.city = city
 			self.table = table
-
+			self.col_list = col_list
 
 		def all_sql(self):
 			query = """SELECT *"""
@@ -196,7 +196,22 @@ class SQL_noid:
 			format.append(table_name)
 
 			query += from_table
+			query = query.format(*format)
 
+			return query
+
+		def some_col(self):
+			query = """SELECT """
+			table_name = self.table + '_' + self.city
+			for each in self.col_list:
+				query += each
+				query += ', '
+			query = query[:-2]  # remove the lat ', ' from the previous loop
+			format = []
+			format.append(schema)
+			format.append(table_name)
+			query += ' '
+			query += from_table
 			query = query.format(*format)
 
 			return query

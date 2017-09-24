@@ -165,3 +165,23 @@ class info_API(Resource):
 		result = all_table(query)
 
 		return result
+
+
+
+class quadTree_API(Resource):
+
+
+	def __init__(self):
+		self.getParser = reqparse.RequestParser()
+		self.getParser.add_argument("city", required=True)
+
+
+	def get(self):
+		args = self.getParser.parse_args()
+		table = 'quadtree'
+		col_list = ['gid', 'cell_id']  # define the columns that you want
+		sql = SQL_noid(args["city"], table, col_list)
+		query = sql.some_col()
+		result = main_q_one(query)
+
+		return result
