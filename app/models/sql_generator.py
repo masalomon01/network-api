@@ -12,8 +12,8 @@ wkt_dict = {'traceid': 'linkid_parade', 'reverseid_trace': 'reverseid_parade', '
 var = '{}, '
 var_last = '{} '
 from_q = 'FROM {}.{}_{}'
-from_table = 'FROM {}.{}'
-
+from_table = 'FROM {}.{} '
+group_by = 'GROUP BY {} '
 
 
 class SQL_wkt:
@@ -74,23 +74,45 @@ class SQL_wkt:
 
 
 
-class SQL_zone:
+class SQL_id_only:
 
 
-	def __init__(self, city, id):
+	def __init__(self, city, id, table, col_list=[]):
 		self.city = city
 		self.id = id
+		self.table = table
+		self.col_list = col_list
 
 	def main_sql(self):
-		zone_dict = {'traceid': 'linkid_parade', 'gid':'gid'}
-		query = """SELECT {}, {} FROM {}.zones_{}"""
-		format = ['zone']
-		format.insert(0, zone_dict[self.id])
+		query = """SELECT {}, """.format(self.id)
+		table_name = self.table + '_' + self.city
+		for each in self.col_list:
+			query += each
+			query += ', '
+		query = query[:-2]  # remove the lat ', ' from the previous loop
+		query += ' '
+		query += from_table
+		format = []
 		format.append(schema)
-		format.append(self.city)
+		format.append(table_name)
 		query = query.format(*format)
 
 		return query
+
+
+	def poe_sql(self):
+		query = """SELECT {}, array_agg({}::int) """.format(self.id, self.col_list[0])
+		table_name = self.table + '_' + self.city
+		query += from_table
+		query += group_by
+		format = []
+		format.append(schema)
+		format.append(table_name)
+		format.append(self.id)
+		query = query.format(*format)
+
+		return query
+
 
 
 

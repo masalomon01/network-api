@@ -36,7 +36,11 @@ class zone_API(Resource):
 
 	def get(self, id):
 		args = self.getParser.parse_args()
-		sql = SQL_zone(args["city"], id)
+		zone_dict = {'traceid': 'linkid_parade', 'gid': 'gid'}
+		col_list = ['zone']
+		new_id = zone_dict[id]
+		table = 'zones'
+		sql = SQL_id_only(args["city"], new_id, table, col_list)
 		query = sql.main_sql()
 		result = main_q_one(query)
 
@@ -183,5 +187,30 @@ class quadTree_API(Resource):
 		sql = SQL_noid(args["city"], table, col_list)
 		query = sql.some_col()
 		result = main_q_one(query)
+
+		return result
+
+
+
+class poeSegments_API(Resource):
+
+
+	def __init__(self):
+		self.getParser = reqparse.RequestParser()
+		self.getParser.add_argument("city", required=True)
+
+
+	def get(self, idType, id):
+		args = self.getParser.parse_args()
+		table = 'poesegments'
+		col_list = [id]
+		sql = SQL_id_only(args["city"], idType, table, col_list)
+		if idType == 'gid' or idType == 'traceid':
+			query = sql.main_sql()
+			result = main_q_one(query)
+		elif idType == 'segment_id':
+			query = sql.poe_sql()
+			result = main_q_one(query)
+
 
 		return result
