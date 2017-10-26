@@ -198,8 +198,22 @@ class poeSegments_API(Resource):
 	def __init__(self):
 		self.getParser = reqparse.RequestParser()
 		self.getParser.add_argument("city", required=True)
+		self.getParser.add_argument("attr", action="append")
 
+	def get(self, id):
+		args = self.getParser.parse_args()
+		table = 'poesegments'
+		sql = SQL_main(args["city"], id, args["attr"], table)
+		if args["attr"] is None:
+			query = sql.all_sql()
+			result = all_main_q(query)
+		else:
+			query = sql.main_sql()
+			result = main_q(query)
 
+		return result
+
+'''
 	def get(self, idType, id):
 		args = self.getParser.parse_args()
 		table = 'poesegments'
@@ -214,3 +228,4 @@ class poeSegments_API(Resource):
 
 
 		return result
+'''
