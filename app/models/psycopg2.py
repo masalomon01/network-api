@@ -15,7 +15,10 @@ cursor = conn.cursor()
 # dict_cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 def main_q(query):
-	cursor.execute(query)
+	try:
+		cursor.execute(query)
+	except:
+		cursor.execute('rollback;')
 	results = cursor.fetchall()
 	m_dic = {}
 	for row in results:
@@ -24,7 +27,10 @@ def main_q(query):
 
 
 def all_main_q(query):
-	cursor.execute(query)
+	try:
+		cursor.execute(query)
+	except:
+		cursor.execute('rollback;')
 	keys = [desc[0] for desc in cursor.description]
 	keys.pop(0)   # remove the first element of the list as that is they dict key or id defined in the api
 	results = cursor.fetchall()
@@ -37,7 +43,10 @@ def all_main_q(query):
 
 
 def all_q(query, keys):
-	cursor.execute(query)
+	try:
+		cursor.execute(query)
+	except:
+		cursor.execute('rollback;')
 	results = cursor.fetchall()
 	m_dic = {}
 	for row in results:
@@ -56,7 +65,10 @@ def all_q(query, keys):
 
 
 def main_q_one(query):
-	cursor.execute(query)
+	try:
+		cursor.execute(query)
+	except:
+		cursor.execute('rollback;')
 	results = cursor.fetchall()
 	m_dic = {}
 	for row in results:
@@ -65,7 +77,10 @@ def main_q_one(query):
 
 
 def point_in_zone_q(query):
-	cursor.execute(query)
+	try:
+		cursor.execute(query)
+	except:
+		cursor.execute('rollback;')
 	results = cursor.fetchall()
 	d = {}
 	for row in results:
@@ -79,7 +94,10 @@ def point_in_zone_q(query):
 
 
 def all_table(query):
-	cursor.execute(query)
+	try:
+		cursor.execute(query)
+	except:
+		cursor.execute('rollback;')
 	keys = [desc[0] for desc in cursor.description]
 	results = cursor.fetchall()
 	count = 0
@@ -94,7 +112,10 @@ def all_table(query):
 
 def dma(query):  # loq means list of queries
 	r_dic = {}
-	cursor.execute(query)
+	try:
+		cursor.execute(query)
+	except:
+		cursor.execute('rollback;')
 	results = cursor.fetchall()
 	for row in results:
 		json_acceptable_string = row[3].replace("'", "\"")

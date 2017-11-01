@@ -200,32 +200,27 @@ class poeSegments_API(Resource):
 		self.getParser.add_argument("city", required=True)
 		self.getParser.add_argument("attr", action="append")
 
-	def get(self, id):
+	def get(self):
 		args = self.getParser.parse_args()
 		table = 'poesegments'
-		sql = SQL_main(args["city"], id, args["attr"], table)
+		group_var = 'segment_id, name, port_of_entry, direction, wt_entity_id, wt_seg_id'
+		col_list = args["attr"]
+		if args["attr"] is not None:
+			for n, each in enumerate(col_list):
+				if each == 'gid':
+					col_list[n] = 'array_agg(gid) as gid'
+				elif each == 'traceid':
+					col_list[n] = 'array_agg(traceid) as traceid'
+				else:
+					pass
+		all = 'segment_id, name, port_of_entry, direction, wt_entity_id, wt_seg_id, array_agg(gid) as gid, array_agg(traceid) as traceid'
+		id = 'segment_id'
+		sql = SQL_group(args["city"], table, group_var, all, id, col_list)
 		if args["attr"] is None:
 			query = sql.all_sql()
 			result = all_main_q(query)
 		else:
-			query = sql.main_sql()
+			query = sql.some_col()
 			result = main_q(query)
 
 		return result
-
-'''
-	def get(self, idType, id):
-		args = self.getParser.parse_args()
-		table = 'poesegments'
-		col_list = [id]
-		sql = SQL_id_only(args["city"], idType, table, col_list)
-		if idType == 'gid' or idType == 'traceid':
-			query = sql.main_sql()
-			result = main_q_one(query)
-		elif idType == 'segment_id':
-			query = sql.poe_sql()
-			result = main_q_one(query)
-
-
-		return result
-'''

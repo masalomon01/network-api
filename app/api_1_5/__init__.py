@@ -16,7 +16,7 @@ api.add_resource(featurePoints_API, '/featurePoints')
 api.add_resource(dma_API, '/dma/<idType>/<cityCode>')
 api.add_resource(info_API, '/network/info')
 api.add_resource(quadTree_API, '/quadtree')
-api.add_resource(poeSegments_API, '/poesegments/<id>')
+api.add_resource(poeSegments_API, '/poesegments')
 
 
 

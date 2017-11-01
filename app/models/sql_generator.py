@@ -17,9 +17,9 @@ group_by = 'GROUP BY {} '
 
 
 class SQL_wkt:
-
-
 	def __init__(self, city, id, args):
+		if city == 'elpaso':
+			city = 'elpaso_juarez'
 		self.city = city
 		self.id = id
 		self.arg_list = args
@@ -75,9 +75,9 @@ class SQL_wkt:
 
 
 class SQL_id_only:
-
-
 	def __init__(self, city, id, table, col_list=[]):
+		if city == 'elpaso':
+			city = 'elpaso_juarez'
 		self.city = city
 		self.id = id
 		self.table = table
@@ -120,6 +120,8 @@ class SQL_census:
 
 
 	def __init__(self, city, lat, lon):
+		if city == 'elpaso':
+			city = 'elpaso_juarez'
 		self.city = city
 		self.lat = lat
 		self.lon = lon
@@ -156,6 +158,8 @@ class SQL_main:
 
 
 	def __init__(self, city, id, args, table):
+		if city == 'elpaso':
+			city = 'elpaso_juarez'
 		self.city = city
 		self.id = id
 		self.arg_list = args
@@ -206,6 +210,8 @@ class SQL_noid:
 
 
 		def __init__(self, city, table, col_list=[]):
+			if city == 'elpaso':
+				city = 'elpaso_juarez'
 			self.city = city
 			self.table = table
 			self.col_list = col_list
@@ -242,6 +248,8 @@ class SQL_noid:
 
 class SQL_dma:
 	def __init__(self, cityCode, idType, args, table):
+		if cityCode == 'elpaso':
+			cityCode = 'elpaso_juarez'
 		self.city = cityCode
 		self.idType = idType
 		self.arg_list = args
@@ -249,7 +257,7 @@ class SQL_dma:
 
 
 	def main_sql(self):
-		loq = []  # loq stands for list of queries
+
 		if len(self.arg_list) > 1:
 			links_q = tuple(self.arg_list)
 		elif len(self.arg_list) == 1:   # added this logic because you don't want to tuple only one link
@@ -281,6 +289,55 @@ class SQL_info:
 					FROM {}.{}
 					WHERE deployment_date in (SELECT MAX(deployment_date) FROM {}.{} 
 					GROUP BY city)""".format(schema, self.table,schema, self.table)
+
+		return query
+
+
+
+class SQL_group:
+	def __init__(self, city, table, group_var, all, id, col_list=[]):
+		if city == 'elpaso':
+			city = 'elpaso_juarez'
+		self.city = city
+		self.table = table
+		self.col_list = col_list
+		self.group_var = group_var
+		self.all = all
+		self.id = id
+
+
+	def all_sql(self):
+		query = """SELECT {} """
+		table_name = self.table + '_' + self.city
+		format = []
+		format.append(self.all)
+		format.append(schema)
+		format.append(table_name)
+		format.append(self.group_var)
+
+		query += from_table
+		query += group_by
+		query = query.format(*format)
+
+		return query
+
+	def some_col(self):
+		query = """SELECT """
+		query += self.id
+		query += ', '
+		table_name = self.table + '_' + self.city
+		for each in self.col_list:
+			query += each
+			query += ', '
+		query = query[:-2]  # remove the lat ', ' from the previous loop
+		format = []
+		format.append(schema)
+		format.append(table_name)
+		format.append(self.group_var)
+		query += ' '
+		query += from_table
+		query += group_by
+		query = query.format(*format)
 
 		return query
 
